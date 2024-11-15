@@ -1,4 +1,4 @@
-import { FC, memo, useState } from "react";
+import { FC, useState } from "react";
 import { Board } from "../../types/Board";
 import { Cell } from "../molecules/Cell"
 import { SRow } from "../../styles/SRow";
@@ -6,7 +6,7 @@ import { PraimaryButton } from "../atom/PraimaryButton";
 import { Title } from "../atom/Title";
 
 // ２よりも大きい数でインスタンス化
-const OthelloBoard = new Board(6,6);
+const OthelloBoard = new Board(8,8);
 let check_all_line_list: Array<Array<number>>  = [];
 let can_put_stone:Array<Array<number>> = [];
 let isPut:boolean = false;
