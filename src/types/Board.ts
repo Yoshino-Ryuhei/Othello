@@ -30,7 +30,6 @@ export class Board {
             [-1, 1], // 右上
             [1, 1], // 右下
         ]
-        console.log(`player${this.player}`)
     }
 
     public cheackColor = (x:number, y:number): number => {
@@ -46,7 +45,8 @@ export class Board {
         return true
     }
 
-    public canPutStoneCell = () => {
+    public canPutStoneCell = ():Array<Array<number>> => {
+        // おけるcellを二次元配列で返す
         let can_put_stone:Array<Array<number>> = [];
 
         this.board.forEach((row, rowIndex) => {
@@ -77,7 +77,7 @@ export class Board {
     }
 
     public checkBoardEdge = (x:number, y:number): boolean => {
-        // 端でないならtrue
+        // Boardの中を参照するか判定
         if (0 <= x && x < this.height){
             if(0 <= y && y < this.width){
                 return true
@@ -87,7 +87,7 @@ export class Board {
     }
 
     public shouldCheckLine = (check_x:number,check_y:number,vec_x:number,vec_y:number): Array<Array<number>>=> {
-        // 方向ベクトルを受け取り、調べないといけない場所を返す
+        // 方向ベクトルを受け取り、調べないといけない場所を二次元配列で返す
         let list: Array<Array<number>> = [];
         while(this.checkBoardEdge(check_x,check_y)){
             list.push([check_x,check_y])
@@ -99,7 +99,7 @@ export class Board {
     }
 
     public checkLine = (list: Array<Array<number>>):Array<Array<number>>  => {
-        // ひっくりかえせる場所を探す
+        // ひっくりかえせる場所を探す(1ライン)
 
         // 挟まれているか判断するフラグ、1なら挟まれている
         let flag = 0;
@@ -132,6 +132,7 @@ export class Board {
             }
         }
 
+        // 挟まれていなかったら
         if (flag === 0){
             checked_line_list = [];
         }
@@ -140,7 +141,7 @@ export class Board {
     }
 
     public checkAllLine = (x:number,y:number): Array<Array<number>>=> {
-        // 引数の場所からひっくりかえせるものがないか探す
+        // 引数の場所からひっくりかえせるものがないか探す(すべてのライン)
         let checked_all_line_list: Array<Array<number>> = [];
         let list: Array<Array<number>> = [];
 
@@ -153,11 +154,10 @@ export class Board {
             let check_x = x + vec_x
             let check_y = y + vec_y
 
-            // 端まで調べる
-            
+            // 調べないといけない場所を探す
             list = this.shouldCheckLine(check_x,check_y,vec_x,vec_y);
             
-            // 端なら処理を飛ばす
+            // なかったら処理を飛ばす
             if(list.length === 0){
                 return
             }
@@ -175,6 +175,10 @@ export class Board {
         let flag = 0;
 
         this.board.forEach((row) => {
+            if(flag === 1){
+                return
+            }
+
             row.forEach((col) => {
                 if(col === -1){
                     flag = 1;
@@ -183,6 +187,7 @@ export class Board {
             })
         });
 
+        // すべて埋まっていれば
         if (flag === 0){
             return true
         }

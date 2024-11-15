@@ -1,8 +1,6 @@
-// 白＝0　黒＝1 何もない=-1
 import { FC } from "react";
 import { SWhiteStone } from "../../styles/SWhiteStone";
 import { SBlackStone } from "../../styles/SBlackStone";
-import { SCell } from "../../styles/SCell";
 
 type Props = {
     color: number;
