@@ -15,10 +15,10 @@ export class Board {
         this.width = width;
         this.player = 1;
         this.board = Array(height).fill([]).map(_ => Array(width).fill(-1));
-        this.board[3][3] = 0;
-        this.board[3][4] = 1;
-        this.board[4][3] = 1;
-        this.board[4][4] = 0;
+        this.board[Math.floor(this.height / 2) - 1][Math.floor(this.width / 2) - 1] = 0;
+        this.board[Math.floor(this.height / 2) - 1][Math.floor(this.width / 2)] = 1;
+        this.board[Math.floor(this.height / 2)][Math.floor(this.width / 2) - 1] = 1;
+        this.board[Math.floor(this.height / 2)][Math.floor(this.width / 2)] = 0;
 
         this.check_line_list = [
             [0, 1], // 右
@@ -50,7 +50,7 @@ export class Board {
         let can_put_stone:Array<Array<number>> = [];
 
         this.board.forEach((row, rowIndex) => {
-            row.forEach((col, colIndex) => {
+            row.forEach((_, colIndex) => {
                 if (this.board[rowIndex][colIndex] !== -1){
                     return
                 }
@@ -190,11 +190,12 @@ export class Board {
         return false
     }
 
-    public judgeWinner = () => {
+    public judgeWinner = (): number => {
         // 勝者を判定
 
         let white:number = 0;
         let black:number = 0;
+        let winner = -1;
 
         this.board.forEach((row) => {
             row.forEach((col) => {
@@ -208,12 +209,12 @@ export class Board {
         });
 
         if (white - black > 0){
-            alert("White winner!");
+            winner = 0;
         }else if(white - black < 0) {
-            alert("Black winner!");
-        }else{
-            alert("Draw");
+            winner = 1;
         }
+
+        return winner
     }
 
     public resetGame = () => {
@@ -221,9 +222,9 @@ export class Board {
 
         this.player = 1;
         this.board = Array(this.height).fill([]).map(_ => Array(this.width).fill(-1));
-        this.board[3][3] = 0;
-        this.board[3][4] = 1;
-        this.board[4][3] = 1;
-        this.board[4][4] = 0;
+        this.board[Math.floor(this.height / 2) - 1][Math.floor(this.width / 2) - 1] = 0;
+        this.board[Math.floor(this.height / 2) - 1][Math.floor(this.width / 2)] = 1;
+        this.board[Math.floor(this.height / 2)][Math.floor(this.width / 2) - 1] = 1;
+        this.board[Math.floor(this.height / 2)][Math.floor(this.width / 2)] = 0;
     }
 }

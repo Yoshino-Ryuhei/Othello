@@ -3,11 +3,15 @@ import { Board } from "../../types/Board";
 import { Cell } from "../molecules/Cell"
 import { SRow } from "../../styles/SRow";
 import { PraimaryButton } from "../atom/PraimaryButton";
+import { Title } from "../atom/Title";
 
-const OthelloBoard = new Board(8,8);
+// ２よりも大きい数でインスタンス化
+const OthelloBoard = new Board(6,6);
 let check_all_line_list: Array<Array<number>>  = [];
 let can_put_stone:Array<Array<number>> = [];
 let isPut:boolean = false;
+let isGameFinish:boolean = false; 
+let isWinner:number = 1;  
 
 export const Field: FC = () => {
 
@@ -34,13 +38,6 @@ export const Field: FC = () => {
             alert("can`t change turn")
         }
 
-        // ゲーム終了判定
-        // if(OthelloBoard.isFullGame()){
-        //     alert("game finish");
-        //     OthelloBoard.judgeWinner();
-        //     return
-        // }
-
         OthelloBoard.changeTurn()
         console.log(OthelloBoard.player)
 
@@ -50,7 +47,11 @@ export const Field: FC = () => {
     }
 
     const onClickReset = () => {
+        // リセット処理
         OthelloBoard.resetGame();
+        isPut = false;
+        isGameFinish = false; 
+        isWinner = 1;
         setOthello(OthelloBoard.board);
         alert("reset game");
     }
@@ -69,7 +70,9 @@ export const Field: FC = () => {
     // ゲーム終了判定
     if(OthelloBoard.isFullGame()){
         alert("game finish");
-        OthelloBoard.judgeWinner();
+        isWinner = OthelloBoard.judgeWinner();
+        console.log(isWinner);
+        isGameFinish = true;
     }
     
     // 駒を置ける場所を特定
@@ -82,36 +85,42 @@ export const Field: FC = () => {
         if(OthelloBoard.canPutStoneCell().length === 0){
             alert("Both player can't put stone. Game finish")
             OthelloBoard.judgeWinner();
+            isGameFinish = true;
         }
     }
 
 
 
     return (
-        <div className="container">
-            {OthelloBoard.board.map((row,x) => [
-                <SRow>
-                    {row.map((column,y) => {
-                        console.log(typeof([x,y]));
-                        isPut = false;
-                        
-                        for (let i = 0; i < can_put_stone.length; i++){
-                            if(isEqualArray(can_put_stone[i], [x,y])){
-                                isPut = true;
+        <>
+            <Title title={OthelloBoard.player ? "黒の番です" : "白の番です"} />
+            <div className="container">
+                {OthelloBoard.board.map((row,x) => [
+                    <SRow>
+                        {row.map((column,y) => {
+                            console.log(typeof([x,y]));
+                            isPut = false;
+                            
+                            for (let i = 0; i < can_put_stone.length; i++){
+                                if(isEqualArray(can_put_stone[i], [x,y])){
+                                    isPut = true;
+                                }
                             }
-                        }
 
-                        return(<Cell 
-                            key={`${x}-${y}`}
-                            x={x}
-                            y={y}
-                            isPut={isPut} 
-                            color={column}
-                            onClick={onClickCell}/>)
-                    })}
-                </SRow>
-            ])}
-            <PraimaryButton onClick={onClickReset}/>
-        </div>
+                            return(<Cell 
+                                key={`${x}-${y}`}
+                                x={x}
+                                y={y}
+                                isPut={isPut} 
+                                color={column}
+                                onClick={onClickCell}/>)
+                        })}
+                    </SRow>
+                ])}
+                <PraimaryButton onClick={onClickReset}/>
+            </div>
+            <Title title={isGameFinish ? (isWinner === -1 ?  ("引き分けです") :
+             (isWinner ? ("黒の勝利です") : ("白の勝利です"))) : ("")} />
+        </>
     )
 }
