@@ -8,7 +8,7 @@ import { isEqualArray } from "../function/isEqualArray";
 
 // 初期化
 // ２よりも大きい数でインスタンス化
-const OthelloBoard = new Board(4,4);
+const OthelloBoard = new Board(8,8);
 
 // リスト
 let check_all_line_list: Array<Array<number>>  = [];
